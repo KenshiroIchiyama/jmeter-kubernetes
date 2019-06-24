@@ -21,6 +21,8 @@ spec:
           volumeMounts:
           - name: config-volume
             mountPath: /etc/influxdb
+          - name: claim-volume-influxdb
+            mountPath: /var/lib/influxdb
           ports:
             - containerPort: 8083
               name: influx
@@ -32,3 +34,6 @@ spec:
       - name: config-volume
         configMap:
          name: influxdb-config
+      - name: claim-volume-influxdb
+        persistentVolumeClaim:
+         claimName: influxdb-disk

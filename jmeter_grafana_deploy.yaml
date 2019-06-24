@@ -34,3 +34,18 @@ spec:
           # If you're only using the API Server proxy, set this value instead:
           # value: /api/v1/namespaces/kube-system/services/monitoring-grafana/proxy
           value: /
+        volumeMounts:
+        - name: grafana-volume
+          mountPath: /var/lib/grafana
+      volumes:
+      - name: grafana-volume
+        #emptyDir: {}
+        persistentVolumeClaim:
+         claimName: grafana-disk
+      securityContext:
+       fsGroup: 2000
+       runAsNonRoot: true
+       runAsUser: 1000
+
+
+       

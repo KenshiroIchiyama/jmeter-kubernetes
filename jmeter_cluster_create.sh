@@ -77,6 +77,8 @@ kubectl create -n $tenant -f $working_dir/jmeter_master_deploy.yaml
 
 echo "Creating Influxdb and the service"
 
+kubectl apply -n k8s -f pvc-influxdb.yaml
+
 kubectl create -n $tenant -f $working_dir/jmeter_influxdb_configmap.yaml
 
 kubectl create -n $tenant -f $working_dir/jmeter_influxdb_deploy.yaml
