@@ -15,6 +15,7 @@ working_dir=$(pwd)
 tenant=$(awk '{print $NF}' "$working_dir"/tenant_export)
 
 jmx_dir=$1
+test_name="$(basename "$jmx_dir")"
 
 if [ ! -d "$jmx_dir" ];
 then
@@ -29,13 +30,13 @@ printf "Copy %s to master\n" "${jmx_dir}.jmx"
 
 master_pod=$(kubectl get po -n "$tenant" | grep jmeter-master | awk '{print $1}')
 
-kubectl cp "${jmx_dir}/${jmx_dir}.jmx" -n "$tenant" "$master_pod":/
+kubectl cp "${jmx_dir}/${test_name}.jmx" -n "$tenant" "$master_pod":/
 
 # Get slaves
 
 printf "Get number of slaves\n"
 
-slave_pods=($(kubectl get po -n "$tenant" | grep jmeter-slave | awk '{print $1}'))
+slave_pods=($(kubectl get po -n "$tenant" | grep -s "jmeter-slave.*Running" | awk '{print $1}'))
 
 # for array iteration
 slavesnum=${#slave_pods[@]}
@@ -72,4 +73,5 @@ done # for csvfile in "${jmx_dir}/*.csv"
 
 ## Echo Starting Jmeter load test
 
-kubectl exec -ti -n "$tenant" "$master_pod" -- /jmeter/load_test "/${jmx_dir}.jmx"
+#kubectl exec -ti -n "$tenant" "$master_pod" -- /jmeter/load_test "/${jmx_dir}.jmx"
+kubectl exec -ti -n $tenant $master_pod -- /bin/bash /load_test "/${test_name}.jmx"

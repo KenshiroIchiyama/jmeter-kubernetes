@@ -37,3 +37,5 @@ spec:
       - name: claim-volume-influxdb
         persistentVolumeClaim:
          claimName: influxdb-disk
+      nodeSelector:
+       type: master
